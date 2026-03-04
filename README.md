@@ -10,12 +10,10 @@
 Proyek ini adalah aplikasi mobile berbasis **Flutter** yang dikembangkan untuk memahami konsep dasar *State Management* (StatefulWidget). Aplikasi ini memiliki fungsi utama untuk memanipulasi nilai angka melalui interaksi tombol tambah, kurang, dan reset.
 
 ## 📸 Tampilan Aplikasi
-> **Catatan:** Masukkan screenshot aplikasi kamu di bawah ini agar laporan lebih jelas.
 
 |  |  |
 | :---: | :---: |
-| ![](/image.png) | ![](/increment.png) |
-|      |     mmm   |
+| ![](/image.png) | |
 
 ---
 
@@ -51,4 +49,5 @@ void _resetAngka(){
   setState(() {
     _counter = 0;
   });
-}web
+}
+
