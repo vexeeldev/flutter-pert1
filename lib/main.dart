@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:device_preview/device_preview.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode, // aktif hanya saat debug
+      builder: (context) => const MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,6 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      // WAJIB untuk DevicePreview
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -28,44 +43,43 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Product Listing")),
       body: ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(2.0, 10.0, 2.0, 10.0),
+        padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
         children: const <Widget>[
           ProductBox(
             name: "iPhone",
             description: "iPhone is the stylist phone ever",
             price: 1000,
-            image: "laptop.jpg",
+            image: "assets/laptop.jpg",
           ),
           ProductBox(
             name: "Pixel",
             description: "Pixel is the most featureful phone ever",
             price: 800,
-            image: "pixel.jpg",
+            image: "assets/pixel.jpg",
           ),
           ProductBox(
             name: "Laptop",
             description: "Laptop is most productive development tool",
             price: 2000,
-            image: "iphone.jpg",
+            image: "assets/iphone.jpg",
           ),
           ProductBox(
             name: "Tablet",
             description: "Tablet is the most useful device ever for meeting",
             price: 1500,
-            image: "tablet.jpg", // <-- ini contoh null
+            image: null, // contoh null
           ),
           ProductBox(
             name: "Pendrive",
             description: "Pendrive is useful storage medium",
             price: 100,
-            image: "pendrive.jpg",
+            image: "assets/pendrive.jpg",
           ),
           ProductBox(
             name: "Floppy Drive",
             description: "Floppy drive is useful rescue storage medium",
             price: 20,
-            image: "floppy.jpg", // <-- null lagi, hidup bebas
+            image: null, // null lagi
           ),
         ],
       ),
@@ -79,7 +93,7 @@ class ProductBox extends StatelessWidget {
     required this.name,
     required this.description,
     required this.price,
-    this.image, // nullable
+    this.image,
   }) : super(key: key);
 
   final String name;
@@ -90,29 +104,46 @@ class ProductBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(2),
+      margin: const EdgeInsets.only(bottom: 10),
       height: 120,
       child: Card(
+        elevation: 3,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            // HANDLE NULL DI SINI
-            image != null
-                ? Image.asset(image!)
-                : const Icon(Icons.image_not_supported, size: 50),
+            // HANDLE NULL IMAGE
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: image != null
+                  ? Image.asset(
+                      image!,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : const Icon(Icons.image_not_supported, size: 80),
+            ),
 
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(5),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
+                    const SizedBox(height: 5),
                     Text(description),
-                    Text("Price: $price"),
+                    const SizedBox(height: 5),
+                    Text(
+                      "Price: \$$price",
+                      style: const TextStyle(color: Colors.green),
+                    ),
                   ],
                 ),
               ),
