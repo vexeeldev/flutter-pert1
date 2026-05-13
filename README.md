@@ -1,1 +1,1 @@
-/login.png
+![Preview](login.png)
